@@ -63,7 +63,7 @@ var ld33 = {
 		    maxHeight: 10,
 		    minHeight: 0,
 		    steps: 1,
-		    useBufferGeometry: true,
+		    useBufferGeometry: false,
 		    xSegments: xS,
 		    xSize: 100,
 		    ySegments: yS,
@@ -81,7 +81,7 @@ var ld33 = {
 				}));
 		base.receiveShadow = true;
 		this.field.add(base);
-
+	
 		this.scene.add(this.field);
 /*
 
