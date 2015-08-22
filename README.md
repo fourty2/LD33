@@ -3,34 +3,44 @@
 My LudumDare #33 Compo Entry
 
 
+Hannibal Lector vs. Will Graham
+
+
 Hanni Ball 
 ----------
 
+setting:
+was dunkles. rot. farbverlauf.
+wolken/ nebel
+
 
 todos:
- * Spielfeld
- * spieler
- * spieler steuerung (gamepad/s, tastatur)
- 		vorwärts ist weg von camera, 
- 		rückwärts zur camera hin
- 		
-
-
- * kollisionsabfrage (zum spielfeld und zum gegner)
-
- * respawn
-
 
 * generierung von welten
 * spieler modellieren
+	* wie könnte ein hannibal(l) dann aussehen?
+
 * bäume, etc. modellieren
 * musik/ soundeffekte
+	* software?
 
-* gimmicks
+* gimmicks / waffen
+!! GEWEIHE !!
+
+* animationen
+-> extra szene, bei tod?
 
 
-* title screen 
+
+Bugs:
+* kollisionsabfrage manchmal kaputt
+* dass die bälle immer in der kleinen differenz hüpfen, nervt
 
 
 
 
+generierung einer floating insel
+
+* terrain generator
+-> "kreis" ausschneiden?
+kreis drumherum, aber wie?

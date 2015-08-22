@@ -51,16 +51,50 @@ var ld33 = {
 		this.scene.add(light);
 
 
+		var xS = 63, yS = 63;
+
+		this.field = new THREE.Object3D();
+
+		var terrain = THREE.Terrain({
+		    easing: THREE.Terrain.Linear,
+		    frequency: 2.5,
+		    heightmap: THREE.Terrain.Hill,
+		    material: new THREE.MeshLambertMaterial({color: 0x80f080, shading: THREE.FlatShading}),
+		    maxHeight: 10,
+		    minHeight: 0,
+		    steps: 1,
+		    useBufferGeometry: true,
+		    xSegments: xS,
+		    xSize: 100,
+		    ySegments: yS,
+		    ySize: 100,
+		});
+		terrain.children[0].receiveShadow = true;
+		// Assuming you already have your global scene
+		this.field.add(terrain);
+
+		var base  = new THREE.Mesh(
+			new THREE.BoxGeometry(100,1,100),
+			new THREE.MeshLambertMaterial(
+				{color: 0x80f080,
+					shading: THREE.FlatShading
+				}));
+		base.receiveShadow = true;
+		this.field.add(base);
+
+		this.scene.add(this.field);
+/*
 
                                                                                                                                                                                                                                                                           
-		this.field = new THREE.Mesh(
+		var base  = new THREE.Mesh(
 			new THREE.BoxGeometry(100,10,100),
 			new THREE.MeshLambertMaterial(
 				{color: 0x80f080,
 					shading: THREE.FlatShading
 				}));
 		this.field.receiveShadow = true;
-		this.scene.add(this.field);
+		*/
+//		this.scene.add(this.field);
 
 
 		console.log(this.camera.position);
@@ -82,8 +116,6 @@ var ld33 = {
 
 
 	
-		this.startTime = new Date();
-
 		//this.updateTimer();
 		//this.updatePoints();
 		this.createMenu();
@@ -94,7 +126,7 @@ var ld33 = {
 	updateTimer: function() {
 		var actualTime = new Date();
 		
-		var difference = (3 * 60 )- Math.floor((actualTime - this.startTime) / 1000);
+		var difference = (3 * 30 )- Math.floor((actualTime - this.startTime) / 1000);
 
 		var timerString = Math.floor(difference / 60) + ":" + Math.floor((difference % 60) )+ " min";
 
@@ -102,8 +134,14 @@ var ld33 = {
 		var txElem = document.getElementById('timerText');
 		txElem.innerText = timerString;
 
-		window.setTimeout(ld33.updateTimer.bind(this), 1000);
+		if (difference <= 0) {
+			this.stopGame();
+		}
 
+		if (this.gameState == 1) {
+			window.setTimeout(ld33.updateTimer.bind(this), 1000);	
+		}
+	
 	},
 
 	updatePoints: function() {
@@ -163,10 +201,11 @@ var ld33 = {
 
 	},
 
-	createMenu: function() {
+	createMenu: function(newText) {
 
+		var text = newText || "HanniBall";
 		this.menuLine = new THREE.Mesh(
-				new THREE.TextGeometry("HanniBall",
+				new THREE.TextGeometry(text,
 						{
 							size: 13,
 							height: 2,
@@ -194,11 +233,25 @@ var ld33 = {
 		console.log("start game");
 		this.scene.remove(this.menuLine);
 		var infoElem = document.getElementById('infoText');
-		infoText.style.display = 'none';
+		infoText.style.display = 'none';		
+		this.startTime = new Date();
+		this.pointsP1 = 0;
+		this.pointsP2 = 0;
 		this.updateTimer();
 		this.updatePoints();
 		this.player1.mesh.position.set(-30,30,-30);
 		this.player2.mesh.position.set(30,30,30);
+	},
+
+	stopGame: function() {
+
+		this.gameState = 0;
+
+		this.createMenu(this.pointsP1 > this.pointsP2 ? "P1 WINS!" : (this.pointsP1 == this.pointsP2)? "DRAW!" : "P2 WINS!");
+		var infoElem = document.getElementById('infoText');
+		infoText.style.display = 'block';		
+
+
 	},
 
 	render: function() {

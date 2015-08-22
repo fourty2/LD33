@@ -46,10 +46,10 @@ Player.prototype = {
 		// raycasting to 
 		this.raycaster.set (this.mesh.position, new THREE.Vector3(0, this.accZ, 0).normalize());
 
-		var intersects = this.raycaster.intersectObject(field, false);
+		var intersects = this.raycaster.intersectObject(field, true);
 		if (intersects.length > 0) {
 			if (intersects[0].distance <= 5.5) {
-				//console.log("collision");
+				
 				/*
 				console.log(this.mesh.position.y);
 				console.log(this.accZ);*/
