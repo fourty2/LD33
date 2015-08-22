@@ -3,6 +3,7 @@ var ld33 = {
 	gamecanvas: null,
 	camera: null,
 	scene: null,
+	field: null,
 	init: function() {
 	
 		var WIDTH = window.innerWidth;
@@ -48,23 +49,28 @@ var ld33 = {
 
 
                                                                                                                                                                                                                                                                           
-		var mesh = new THREE.Mesh(
+		this.field = new THREE.Mesh(
 			new THREE.BoxGeometry(100,10,100),
 			new THREE.MeshLambertMaterial(
 				{color: 0x80f080,
 					shading: THREE.FlatShading
 				}));
-		mesh.receiveShadow = true;
-		this.scene.add(mesh);
+		this.field.receiveShadow = true;
+		this.scene.add(this.field);
 
 
 		console.log(this.camera.position);
-		this.camera.lookAt(mesh.position);
+		this.camera.lookAt(this.field.position);
 
 
 		// init player
-		Player.init();
-		this.scene.add(Player.mesh);
+		this.player1 = new Player();//.init();
+		this.player1.init(new THREE.Vector3(-30,30,-30), 0xff0000);
+		this.scene.add(this.player1.mesh);
+
+		this.player2 = new Player();//.init();
+		this.player2.init(new THREE.Vector3(30,30,30), 0x0000ff);
+		this.scene.add(this.player2.mesh);
 
 
 		this.animate();
@@ -79,16 +85,35 @@ var ld33 = {
 		if (pads[0]) {
 			var pad = pads[0];
 
-			Player.move(pad.axes[0], pad.axes[1], pad.buttons[0]);
+			this.player1.move(pad.axes[0], pad.axes[1], pad.buttons[0]);
+			this.player2.move(pad.axes[2], pad.axes[3], pad.buttons[1]);
 
 		}
 	
 	},
 
+	checkWinOrLoose: function() {
+
+		if (this.player1.mesh.position.y < -30) {
+			console.log("player1 lost");
+			this.player1.mesh.position.set(-30,30,-30);
+		}
+
+		if (this.player2.mesh.position.y < -30) {
+			console.log("player2 lost");
+			this.player2.mesh.position.set(30,30,30);
+		}
+
+
+	},
+
 	render: function() {
 
 		this.checkInput();
-		Player.updatePosition();
+		this.player1.updatePosition(this.field, this.player2);
+		this.player2.updatePosition(this.field, this.player1);
+
+		this.checkWinOrLoose();
 
 		this.renderer.render(this.scene, this.camera);
 	},
