@@ -30,18 +30,19 @@ var ld33 = {
 
 		// 
 		var light = new THREE.DirectionalLight(0xffffff);
-		light.position.set(0,1,0);
-		//light.target.position.set(0, 0, 0);
-		/*light.castShadow = true;
+		light.position.set(20,50,0);
+		light.target.position.set(0, 0, 0);
+		light.castShadow = true;
+
 		light.shadowCameraNear = 0.1;
 		light.shadowCameraFar = 300;
 
 		light.shadowCameraLeft = -50;
-light.shadowCameraRight = 50;
-light.shadowCameraTop = 50;
-light.shadowCameraBottom = -50;
-		light.shadowCameraVisible = true;
-		*/	
+		light.shadowCameraRight = 50;
+		light.shadowCameraTop = 50;
+		light.shadowCameraBottom = -50;
+	//	light.shadowCameraVisible = true;
+		
 		this.scene.add(light);
 
 
@@ -53,6 +54,7 @@ light.shadowCameraBottom = -50;
 				{color: 0x80f080,
 					shading: THREE.FlatShading
 				}));
+		mesh.receiveShadow = true;
 		this.scene.add(mesh);
 
 
@@ -60,13 +62,34 @@ light.shadowCameraBottom = -50;
 		this.camera.lookAt(mesh.position);
 
 
+		// init player
+		Player.init();
+		this.scene.add(Player.mesh);
 
 
 		this.animate();
 		// @todo onresize handling
 	},
 
+	checkInput: function() {
+
+
+
+		var pads = navigator.getGamepads();
+		if (pads[0]) {
+			var pad = pads[0];
+
+			Player.move(pad.axes[0], pad.axes[1], pad.buttons[0]);
+
+		}
+	
+	},
+
 	render: function() {
+
+		this.checkInput();
+		Player.updatePosition();
+
 		this.renderer.render(this.scene, this.camera);
 	},
 
