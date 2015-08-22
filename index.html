@@ -1,10 +1,46 @@
 <!doctype html>
 <html>
+<head>
+<style>
+#timerText {
+	font-family: Verdana;
+	position: absolute;
+	left: 30%;
+}
+
+#pointsText {
+	font-family: Verdana;
+	position: absolute;
+	right: 30%;
+}
+
+#infoText {
+	font-family: Verdana;
+	position: absolute;
+	font-weight: bold;
+	color: #800080;
+	margin: 0 auto;
+	top: 60%;
+	width: 100%;
+	text-align: center;
+}
+
+</style>
+
+</head>
 <body>
+
+<div id="timerText">03:00 min</div>
+<div id="pointsText">P1 0:0 P2</div>
+<div id="infoText">
+PRESS A BUTTON TO START
+</div>
 
 <canvas id="gamecanvas"></canvas>
 
 <script src="js/three.min.js"></script>
+<script src="js/LobsterLove_Medium.js"></script>
+
 <script src="js/player.js"></script>
 <script src="js/game.js"></script>
 

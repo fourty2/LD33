@@ -1,5 +1,5 @@
-var Player = function() {
-
+var Player = function(playerName) {
+	this.playerName = playerName;
 }
 
 Player.prototype = {
@@ -17,9 +17,26 @@ Player.prototype = {
 						shading: THREE.FlatShading
 					})
 			);
+
+		this.playerText = new THREE.Mesh(
+				new THREE.TextGeometry(this.playerName,
+						{
+							size: 4,
+							height: 1,
+							font: 'LobsterLove',
+							weight: 'normal',
+							style: 'normal'
+						}
+					),
+				new THREE.MeshLambertMaterial({color: 0x8800ff})
+			);
+
+
+
 		this.mesh.castShadow = true;
 
 		this.mesh.position.set(position.x, position.y, position.z); 
+		this.playerText.position.set(position.x, position.y + 10, position.z); 
 		this.raycaster = new THREE.Raycaster();
 
 	},
@@ -103,7 +120,7 @@ this.raycaster.set (this.mesh.position, new THREE.Vector3(this.accX, this.accZ, 
 		
 		
 
-
+		this.playerText.position.set(this.mesh.position.x + 5 , this.mesh.position.y + 8, this.mesh.position.z); 
 
 
 	},
