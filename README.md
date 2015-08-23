@@ -7,15 +7,7 @@ My LudumDare #33 Compo Entry
 Hanni Ball 
 ----------
 
-setting:
-
-
 todos:
-
-
-* steuerung
-
-
 
 
 nice to haves

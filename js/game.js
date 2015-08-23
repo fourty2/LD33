@@ -8,6 +8,21 @@ var ld33 = {
 	pointsP1: 0,
 	pointsP2: 0,
 	gameState: 0,
+	inputState: {
+		keys: {
+			UP: 38,
+			W: 87,
+			LEFT: 37,
+			A: 65,
+			DOWN: 40,
+			S: 83,
+			RIGHT: 39,
+			D: 68,
+			RETURN: 13,
+			SPACE: 32
+		} ,
+		pressed: {}
+	},
 	init: function() {
 
 		// load audio files
@@ -240,7 +255,8 @@ var ld33 = {
 		this.scene.add(this.player2.mesh);
 
 		this.scene.add(this.player2.playerText);
-
+		window.addEventListener("keydown", ld33.kbInputDown, false);
+		window.addEventListener("keyup", ld33.kbInputUp, false);
 		window.addEventListener( 'resize', ld33.onWindowResize.bind(this), false );
 	
 		this.effectComposer = new THREE.EffectComposer( this.renderer);
@@ -271,6 +287,28 @@ var ld33 = {
 
 	},
 
+	kbInputUp: function(e) {
+		index = [ld33.inputState.keys.RETURN, ld33.inputState.keys.SPACE,ld33.inputState.keys.UP,ld33.inputState.keys.DOWN,ld33.inputState.keys.LEFT,ld33.inputState.keys.RIGHT,ld33.inputState.keys.W,ld33.inputState.keys.A,ld33.inputState.keys.S,ld33.inputState.keys.D].indexOf(e.keyCode);
+		if (index >= 0) {
+			ld33.inputState.pressed[e.keyCode] = false;
+			e.preventDefault();
+		}
+
+	},
+	kbInputDown: function(e) {
+
+		if (ld33.gameState == 0) {
+			ld33.gameState = 1;
+			ld33.startGame();
+		}
+
+		index = [ld33.inputState.keys.RETURN, ld33.inputState.keys.SPACE,ld33.inputState.keys.UP,ld33.inputState.keys.DOWN,ld33.inputState.keys.LEFT,ld33.inputState.keys.RIGHT,ld33.inputState.keys.W,ld33.inputState.keys.A,ld33.inputState.keys.S,ld33.inputState.keys.D].indexOf(e.keyCode);
+		if (index >= 0) {
+			ld33.inputState.pressed[e.keyCode] = true;
+			e.preventDefault();
+		}
+
+	},
 	updateTimer: function() {
 		var actualTime = new Date();
 		
@@ -318,15 +356,30 @@ var ld33 = {
 	checkInput: function() {
 
 
+		// check keyboard input
+		var p2Y = ld33.inputState.pressed[this.inputState.keys.UP] ? -1 : (ld33.inputState.pressed[this.inputState.keys.DOWN] ? 1 : 0);
+		var p2X = ld33.inputState.pressed[this.inputState.keys.LEFT] ? -1 : (ld33.inputState.pressed[this.inputState.keys.RIGHT] ? 1 : 0);
+		
+		var p1Y = ld33.inputState.pressed[this.inputState.keys.W] ? -1 : (ld33.inputState.pressed[this.inputState.keys.S] ? 1 : 0);
+		var p1X = ld33.inputState.pressed[this.inputState.keys.A] ? -1 : (ld33.inputState.pressed[this.inputState.keys.D] ? 1 : 0);
+
 
 		var pads = navigator.getGamepads();
 		if (pads[0]) {
 			var pad = pads[0];
-
 			this.player1.move(pad.axes[0], pad.axes[1], pad.buttons[0]);
-			this.player2.move(pad.axes[2], pad.axes[3], pad.buttons[1]);
-
+		} else {
+			this.player1.move(p1X, p1Y, {pressed: ld33.inputState.pressed[this.inputState.keys.SPACE]});
 		}
+
+		if (pads[1]) {
+			var pad = pads[1];
+
+			this.player2.move(pad.axes[0], pad.axes[1], pad.buttons[0]);
+			
+		 } else {
+		 	this.player2.move(p2X, p2Y, {pressed: ld33.inputState.pressed[this.inputState.keys.RETURN]});
+		 }		
 	
 	},
 
