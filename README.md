@@ -10,17 +10,15 @@ Hanni Ball
 ----------
 
 setting:
-was dunkles. rot. farbverlauf.
-wolken/ nebel
 
 
 todos:
-
-* generierung von welten
 * spieler modellieren
 	* wie könnte ein hannibal(l) dann aussehen?
 
-* bäume, etc. modellieren
+* kreuze modellieren
+
+
 * musik/ soundeffekte
 	* software?
 
@@ -33,14 +31,8 @@ todos:
 
 
 Bugs:
-* kollisionsabfrage manchmal kaputt
-* dass die bälle immer in der kleinen differenz hüpfen, nervt
+* generierte insel noch nicht sauber
 
 
-
-
-generierung einer floating insel
-
-* terrain generator
--> "kreis" ausschneiden?
-kreis drumherum, aber wie?
+-> 
+insel drehen lassen, während des startbildschirms -> tween

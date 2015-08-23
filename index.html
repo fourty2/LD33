@@ -2,30 +2,39 @@
 <html>
 <head>
 <style>
+body {
+	margin: 0 0;
+}
+
 #timerText {
 	font-family: Verdana;
 	font-weight: bold;
 	position: absolute;
 	left: 30%;
-	color: #800080;
+	color: #f040f0;
+	top: 10%;
+	font-size: 34px;
 }
 
 #pointsText {
 	font-family: Verdana;
 	font-weight: bold;
 	position: absolute;
+	font-size: 34px;
 	right: 30%;
-	color: #800080;
+	top: 10%;
+	color: #f040f0;
 }
 
 #infoText {
 	font-family: Verdana;
 	position: absolute;
 	font-weight: bold;
-	color: #800080;
+	color: #f0a0f0;
 	margin: 0 auto;
 	top: 60%;
 	width: 100%;
+	font-size: 20px;
 	text-align: center;
 }
 
@@ -36,18 +45,29 @@
 
 <div id="timerText">01:30 min</div>
 <div id="pointsText">P1 0:0 P2</div>
+
+
+
 <div id="infoText">
-PRESS A BUTTON TO START
+PRESS A BUTTON TO START<br /><br />
+P1: WASD + Space or Gamepad #1<br />
+P2: CURSOR + Return or Gamepad #2<br /><br />
+a game by @snooze82 for Ludum Dare #33
 </div>
 
 <canvas id="gamecanvas"></canvas>
 
 <script src="js/three.min.js"></script>
+<script src="js/tween.min.js"></script>
 <script src="js/LobsterLove_Medium.js"></script>
 <script src="js/THREE.Terrain.min.js"></script>
 
 <script src="js/player.js"></script>
 <script src="js/game.js"></script>
+<audio id="intro" controls  loop volume="0.3" src="einmaennlein.mp3" type="audio/mp3" autoplay>
+
+</audio>
+
 
 </body>
 </html>

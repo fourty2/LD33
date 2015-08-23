@@ -8,13 +8,17 @@ Player.prototype = {
 	accY: 0,
 	accZ: 0,
 	damping: 10,
+	size: 8,
 	init: function(position, color) {
 
+ 		
+ 		var texture =  THREE.ImageUtils.loadTexture( 'images/hannibal.jpg')  
 		this.mesh = new THREE.Mesh(
-				new THREE.SphereGeometry(5, 8, 8),
+				new THREE.SphereGeometry(this.size, 8, 8),
 				new THREE.MeshLambertMaterial(
-					{color: color,
-						shading: THREE.FlatShading
+					{	color: color,
+						shading: THREE.FlatShading,
+						map: texture
 					})
 			);
 
@@ -36,7 +40,7 @@ Player.prototype = {
 		this.mesh.castShadow = true;
 
 		this.mesh.position.set(position.x, position.y, position.z); 
-		this.playerText.position.set(position.x, position.y + 10, position.z); 
+		this.playerText.position.set(position.x, position.y + this.size + 5, position.z); 
 		this.raycaster = new THREE.Raycaster();
 
 	},
@@ -44,21 +48,19 @@ Player.prototype = {
 
 
 		// raycasting to 
-		this.raycaster.set (this.mesh.position, new THREE.Vector3(0, this.accZ, 0).normalize());
+		this.raycaster.set (this.mesh.position, new THREE.Vector3(0, -1, 0).normalize());
 
 		var intersects = this.raycaster.intersectObject(field, true);
 		if (intersects.length > 0) {
-			if (intersects[0].distance <= 5.5) {
+			if (intersects[0].distance <= this.size + 1) {
 				
+				// 4.5
+				this.mesh.position.y += (this.size - intersects[0].distance);
 				/*
 				console.log(this.mesh.position.y);
 				console.log(this.accZ);*/
 				this.accZ = -this.accZ * 0.80;
 			} 
-			if (this.mesh.position.y < 10) {
-				//console.log("reset ground position");
-				this.mesh.position.y = 10;
-			}
 		}
 
 
@@ -89,39 +91,61 @@ Player.prototype = {
 
 
 
-this.raycaster.set (this.mesh.position, new THREE.Vector3(this.accX, this.accZ, this.accY).normalize());
+		// check for all directions
+
+		this.raycaster.set (this.mesh.position, new THREE.Vector3(this.accX, this.accZ, this.accY).normalize());
 		// check intersection on other player
-		var intersects = this.raycaster.intersectObject(player.mesh, false);
-		if (intersects.length > 0) {
-			if (intersects[0].distance <= 7) {
-				player.accX =this.accX * 1.50; 
-				player.accY =this.accY * 1.50; 
-				player.accZ =this.accZ * 1.50; 
+		
+
+		var bump = false;
+
+		 var playerRays = [
+		 		new THREE.Vector3(this.accX, this.accZ, this.accY).normalize(),
+		      new THREE.Vector3(0, 0, 1),
+		      new THREE.Vector3(1, 0, 1),
+		      new THREE.Vector3(1, 0, 0),
+		      new THREE.Vector3(1, 0, -1),
+		      new THREE.Vector3(0, 0, -1),
+		      new THREE.Vector3(-1, 0, -1),
+		      new THREE.Vector3(-1, 0, 0),
+		      new THREE.Vector3(-1, 0, 1)
+		    ];
+
+		  for (i = 0; i< playerRays.length; i++) {
+			this.raycaster.set (this.mesh.position, playerRays[i]);
+			var intersects = this.raycaster.intersectObject(player.mesh, false);
+			if (intersects.length > 0) {
+				if (intersects[0].distance <= this.size + 2) {
+					bump = true;
+					
+				} else {
+					
+				}
+			}
+		  }
+
+		  if (bump) {
+				player.accX =this.accX * 2.50; 
+				player.accY =this.accY * 2.50; 
+				player.accZ =this.accZ * 1.0; 
 				this.accX = -this.accX * 1.0;
 				this.accY = -this.accY * 1.0;
 				this.accZ = -this.accZ * 1.0;
-//				this.accZ = -this.accZ * 0.20;
-			} else {
-				
-			}
+		  }
+
+
+		
+		this.accZ -= 0.13;
+
+		// cap accZ
+		if (this.accZ > 5) {
+			this.accZ = 5;
 		}
-		
-		if (this.mesh.position.y > 10) {
-			this.accZ -= 0.13;
-		}	
-		
-		//} else if (this.accZ < -1) {
-			/*this.mesh.position.y = 10;
-			this.accZ = -this.accZ * 0.80;
-			*/
-		//} else {
-		//	this.accZ = 0;
-		//}
-		
-		
 
-		this.playerText.position.set(this.mesh.position.x + 5 , this.mesh.position.y + 8, this.mesh.position.z); 
+		this.playerText.position.set(this.mesh.position.x + 5 , this.mesh.position.y + this.size + 3, this.mesh.position.z); 
 
+		this.mesh.rotation.y += 0.01;
+		//console.log(Math.tan(this.accX/this.accY));
 
 	},
 	move: function(x, y, btnA) {
@@ -131,9 +155,11 @@ this.raycaster.set (this.mesh.position, new THREE.Vector3(this.accX, this.accZ, 
 		if (y < -0.08 || y > 0.08) {
 			this.accY -= y * 0.3;
 		}
-		if (btnA.pressed && this.mesh.position.y < 14) {
+		if (btnA.pressed && this.mesh.position.y < 50 + this.size && this.accZ < 0.5) {
 			this.accZ = 3;
 		}
+
+	
 	}
 
 
