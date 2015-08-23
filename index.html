@@ -10,7 +10,7 @@ body {
 	font-family: Verdana;
 	font-weight: bold;
 	position: absolute;
-	left: 30%;
+	left: 20%;
 	color: #f040f0;
 	top: 10%;
 	font-size: 34px;
@@ -21,7 +21,7 @@ body {
 	font-weight: bold;
 	position: absolute;
 	font-size: 34px;
-	right: 30%;
+	right: 20%;
 	top: 10%;
 	color: #f040f0;
 }
@@ -43,7 +43,7 @@ body {
 </head>
 <body>
 
-<div id="timerText">01:30 min</div>
+<div id="timerText">1:0 min</div>
 <div id="pointsText">P1 0:0 P2</div>
 
 
@@ -59,12 +59,20 @@ a game by @snooze82 for Ludum Dare #33
 
 <script src="js/three.min.js"></script>
 <script src="js/tween.min.js"></script>
+<script src="js/EffectComposer.js"></script>
+<script src="js/CopyShader.js"></script>
+<script src="js/ConvolutionShader.js"></script>
+<script src="js/MaskPass.js"></script>
+<script src="js/ShaderPass.js"></script>
+<script src="js/RenderPass.js"></script>
+<script src="js/BloomPass.js"></script>
+
 <script src="js/LobsterLove_Medium.js"></script>
 <script src="js/THREE.Terrain.min.js"></script>
 
 <script src="js/player.js"></script>
 <script src="js/game.js"></script>
-<audio id="intro" controls  loop volume="0.3" src="einmaennlein.mp3" type="audio/mp3" autoplay>
+<audio id="intro" controls  loop volume="0.3" src="einmaennlein.mp3" type="audio/mp3">
 
 </audio>
 

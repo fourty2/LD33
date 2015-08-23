@@ -144,7 +144,7 @@ Player.prototype = {
 
 		this.playerText.position.set(this.mesh.position.x + 5 , this.mesh.position.y + this.size + 3, this.mesh.position.z); 
 
-		this.mesh.rotation.y += 0.01;
+		this.mesh.rotation.y -= 0.02;
 		//console.log(Math.tan(this.accX/this.accY));
 
 	},

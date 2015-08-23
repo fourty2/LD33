@@ -25,6 +25,10 @@ var ld33 = {
 		this.renderer.shadowMap.enabled = true;
 		this.renderer.shadowMapSoft = true;
 		this.renderer.setClearColor(0x402020, 1);
+		this.renderer.autoClear = false;
+
+		this.renderer.gammaInput = true;
+		this.renderer.gammaOutput = false;
 
 
 		this.scene = new THREE.Scene();
@@ -106,7 +110,7 @@ var ld33 = {
 		});
 		terrain.children[0].receiveShadow = true;
 
-
+		terrain.children[0].castShadow = true;
 		terrain.children[0].materials = materials;
 
 		terrain.children[0].geometry.materials = materials;
@@ -132,7 +136,7 @@ var ld33 = {
 		    frequency: 2.5,
 		    heightmap: THREE.Terrain.HillIsland,
 		    material: rfmat,
-		    maxHeight: 200,
+		    maxHeight: 190,
 		    minHeight: 0.1,
 		    steps: 1,
 		    useBufferGeometry: false,
@@ -157,17 +161,20 @@ var ld33 = {
 					var rockface = rock.children[0].geometry.faces[ desiredRow * 126 + (desiredFace)];
 
 
-					if ((terrain.children[0].geometry.vertices[face.a].z  <= 0 ||
-						terrain.children[0].geometry.vertices[face.b].z  <= 0 ||
-						terrain.children[0].geometry.vertices[face.c].z  <= 0 )
+					if ((terrain.children[0].geometry.vertices[face.a].z  <= 0.1 ||
+						terrain.children[0].geometry.vertices[face.b].z  <= 0.1 ||
+						terrain.children[0].geometry.vertices[face.c].z  <= 0.1 )
 						&&
 						(
-						rock.children[0].geometry.vertices[rockface.a].z < 10 ||
-						rock.children[0].geometry.vertices[rockface.b].z < 10 ||
-						rock.children[0].geometry.vertices[rockface.c].z < 10
+						rock.children[0].geometry.vertices[rockface.a].z < 5 ||
+						rock.children[0].geometry.vertices[rockface.b].z < 5 ||
+						rock.children[0].geometry.vertices[rockface.c].z < 5
 
 						)
 						) {
+							rock.children[0].geometry.vertices[rockface.a].z = 0;
+							rock.children[0].geometry.vertices[rockface.b].z = 0;
+							rock.children[0].geometry.vertices[rockface.c].z = 0;
 
 						if (rock.children[0].geometry.vertices[rockface.a].z <1 || 
 						rock.children[0].geometry.vertices[rockface.b].z < 1 ||
@@ -216,16 +223,33 @@ var ld33 = {
 
 		this.scene.add(this.player2.playerText);
 
+		window.addEventListener( 'resize', ld33.onWindowResize.bind(this), false );
+	
+		this.effectComposer = new THREE.EffectComposer( this.renderer);
+		this.effectComposer.addPass( new THREE.RenderPass(this.scene, this.camera));
+		var copyPass = new THREE.ShaderPass( THREE.CopyShader );
+				copyPass.renderToScreen = true;
+		this.effectComposer.addPass( new THREE.BloomPass());
+		this.effectComposer.addPass(copyPass);
+		
 
 		this.createMenu();
 		this.animate();
-		// @todo onresize handling
+	},
+
+	onWindowResize: function(){
+
+	    this.camera.aspect = window.innerWidth / window.innerHeight;
+	    this.camera.updateProjectionMatrix();
+
+	    this.renderer.setSize( window.innerWidth, window.innerHeight );
+
 	},
 
 	updateTimer: function() {
 		var actualTime = new Date();
 		
-		var difference = (3 * 30 )- Math.floor((actualTime - this.startTime) / 1000);
+		var difference = (60 )- Math.floor((actualTime - this.startTime) / 1000);
 
 		var timerString = Math.floor(difference / 60) + ":" + Math.floor((difference % 60) )+ " min";
 
@@ -402,6 +426,14 @@ var ld33 = {
 			this.camera.position.x = x * Math.cos(theta) + z * Math.sin(theta);
 			this.camera.position.z = z * Math.cos(theta) - x * Math.sin(theta);
 			this.camera.lookAt(this.field.position); 
+			
+
+			if (this.pointsP1 >= this.pointsP2 && this.player1.mesh.position.y < 23) {
+				this.player1.accZ = 3;
+			} else if (this.pointsP1 <= this.pointsP2 && this.player2.mesh.position.y < 23 ) {
+				this.player2.accZ = 3;
+			}
+
 
 		} else if (this.gameState = 1) {
 
@@ -421,7 +453,8 @@ var ld33 = {
 		this.player2.playerText.lookAt(this.camera.position);
 
 
-		this.renderer.render(this.scene, this.camera);
+		//this.renderer.render(this.scene, this.camera);
+		this.effectComposer.render(0.017); // ?
 		//
 	},
 
