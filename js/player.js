@@ -125,6 +125,7 @@ Player.prototype = {
 		  }
 
 		  if (bump) {
+		  		ld33.playSound(ld33.soundList[1]);
 				player.accX =this.accX * 2.50; 
 				player.accY =this.accY * 2.50; 
 				player.accZ =this.accZ * 1.0; 
@@ -156,6 +157,7 @@ Player.prototype = {
 			this.accY -= y * 0.3;
 		}
 		if (btnA.pressed && this.mesh.position.y < 50 + this.size && this.accZ < 0.5) {
+			ld33.playSound(ld33.soundList[0]);
 			this.accZ = 3;
 		}
 

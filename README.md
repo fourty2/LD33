@@ -12,8 +12,10 @@ setting:
 
 todos:
 
-* soundeffekte
-* post processing (blur?)
+
+* steuerung
+
+
 
 
 nice to haves

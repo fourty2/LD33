@@ -9,6 +9,24 @@ var ld33 = {
 	pointsP2: 0,
 	gameState: 0,
 	init: function() {
+
+		// load audio files
+		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		this.audioContext = new AudioContext();
+
+		bufferLoader = new BufferLoader(
+			this.audioContext,
+			[
+			  'JumpFinal.wav',
+			  'Hit2.wav',
+			  'Lost.wav'
+			],
+			function(list) { 
+				this.soundList = list;
+			}.bind(this)
+		);
+
+		bufferLoader.load();
 	
 		var WIDTH = window.innerWidth;
 		var HEIGHT = window.innerHeight;
@@ -237,6 +255,13 @@ var ld33 = {
 		this.animate();
 	},
 
+	playSound: function(buffer) {
+	  var source = this.audioContext.createBufferSource();
+	  source.buffer = buffer;
+	  source.connect(this.audioContext.destination);
+	  source.start(0);
+	},
+
 	onWindowResize: function(){
 
 	    this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -307,20 +332,29 @@ var ld33 = {
 
 	checkWinOrLoose: function() {
 
-		if (this.player1.mesh.position.y < -30) {
+		if (
+			!this.isLostPlaying &&
+			(this.player1.mesh.position.y < -5 || this.player2.mesh.position.y < -5)) {
+			this.isLostPlaying = true;
+			ld33.playSound(ld33.soundList[2]);
+		}		
+
+		if (this.player1.mesh.position.y < -50) {
 			console.log("player1 lost");
 			this.pointsP2++;
 			this.updatePoints();
 			this.player1.accX = this.player1.accY = this.player1.accZ = 0;
 			this.player1.mesh.position.set(-30,30,-30);
+			this.isLostPlaying = false;
 		}
 
-		if (this.player2.mesh.position.y < -30) {
+		if (this.player2.mesh.position.y < -50) {
 			console.log("player2 lost");
 			this.pointsP1++;
 			this.updatePoints();
 			this.player2.accX = this.player2.accY = this.player2.accZ = 0;
 			this.player2.mesh.position.set(30,30,30);
+			this.isLostPlaying = false;
 		}
 
 
