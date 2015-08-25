@@ -71,6 +71,24 @@ var ld33 = {
 		this.scene.add(this.camera);
 
 		// 
+
+		var uplight = new THREE.DirectionalLight(0x000000, 2.0);
+		uplight.onlyShadow = true;
+		uplight.position.set(0,200,0);
+		uplight.target.position.set(0, 0, 0);
+		uplight.castShadow = true;
+
+		uplight.shadowCameraNear = 0.1;
+		uplight.shadowCameraFar = 200;
+
+		uplight.shadowCameraLeft = -100;
+		uplight.shadowCameraRight = 100;
+		uplight.shadowCameraTop = 100;
+		uplight.shadowCameraBottom = -100;
+		uplight.shadowDarkness = 0.5;
+		
+		this.scene.add(uplight);
+
 		var light = new THREE.SpotLight(0xffa0a0, 1.5);
 		light.position.set(140,140,-200);
 		light.target.position.set(0, 0, 0);
@@ -83,6 +101,7 @@ var ld33 = {
 		light.shadowCameraRight = 75;
 		light.shadowCameraTop = 75;
 		light.shadowCameraBottom = -75;
+		light.shadowDarkness = 0.8;
 		//light.shadowCameraVisible = true;
 		  
 		this.scene.add(light);
@@ -142,10 +161,7 @@ var ld33 = {
 		    ySize: 200,
 		});
 		terrain.children[0].receiveShadow = true;
-
-		terrain.children[0].castShadow = true;
 		terrain.children[0].materials = materials;
-
 		terrain.children[0].geometry.materials = materials;
 
 
